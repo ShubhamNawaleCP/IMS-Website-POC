@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="IMS Counselling Center POC with Salesforce Agentforce integration placeholder." />
+  <title>IMS Counselling Center | POC</title>
+
+  <style>
+    :root{
+      --navy:#0a2f57;
+      --navy-2:#123f6d;
+      --blue:#0b72b9;
+      --cyan:#22b8cf;
+      --orange:#f36f21;
+      --orange-dark:#d95c10;
+      --ink:#14202b;
+      --muted:#657487;
+      --line:#dfe7ef;
+      --soft:#f5f8fb;
+      --soft-blue:#edf6fb;
+      --green:#1b8c6b;
+      --white:#ffffff;
+      --shadow:0 18px 50px rgba(20,47,87,.12);
+      --radius:18px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      color:var(--ink);
+      background:#fff;
+      font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      line-height:1.55;
+    }
+    a{color:inherit;text-decoration:none}
+    button,input,select,textarea{font:inherit}
+    img,svg{display:block;max-width:100%}
+    .container{width:min(1180px,92vw);margin-inline:auto}
+    .section{padding:76px 0}
+    .eyebrow{
+      display:inline-flex;align-items:center;gap:8px;
+      font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+      color:var(--blue);background:var(--soft-blue);border:1px solid #cfe5f1;
+      border-radius:999px;padding:8px 12px;
+    }
+    h1,h2,h3,p{margin-top:0}
+    h1{font-size:clamp(40px,5vw,68px);line-height:1.04;letter-spacing:-.04em;margin-bottom:22px}
+    h2{font-size:clamp(30px,3.4vw,46px);line-height:1.1;letter-spacing:-.03em;margin-bottom:14px}
+    h3{font-size:20px;line-height:1.2}
+    .lead{font-size:18px;color:var(--muted);max-width:700px}
+
+    /* top strip */
+    .top-strip{background:var(--navy);color:#fff;font-size:13px}
+    .top-strip .container{display:flex;justify-content:space-between;gap:20px;padding:8px 0;align-items:center}
+    .top-strip .right{display:flex;gap:18px;opacity:.94}
+    .top-strip strong{color:#fff}
+
+    /* header */
+    .header{
+      position:sticky;top:0;z-index:40;background:rgba(255,255,255,.96);
+      backdrop-filter:blur(14px);border-bottom:1px solid rgba(10,47,87,.08)
+    }
+    .nav{display:flex;align-items:center;justify-content:space-between;gap:28px;min-height:76px}
+    .brand{display:flex;align-items:center;gap:12px;min-width:max-content}
+    .brand-mark{
+      width:55px;height:40px;border-radius:12px 12px 8px 8px;background:var(--navy);
+      color:#fff;display:grid;place-items:center;font-weight:900;font-size:22px;letter-spacing:-.05em;
+      box-shadow:inset 0 -4px 0 var(--orange)
+    }
+    .brand-copy b{display:block;color:var(--navy);font-size:15px}
+    .brand-copy span{display:block;color:var(--muted);font-size:11px;letter-spacing:.04em;text-transform:uppercase}
+    .nav-links{display:flex;gap:24px;align-items:center;font-size:14px;font-weight:700;color:#29435b}
+    .nav-links a:hover{color:var(--blue)}
+    .nav-actions{display:flex;gap:10px;align-items:center}
+    .btn{
+      border:none;border-radius:12px;padding:12px 18px;font-weight:800;cursor:pointer;
+      transition:.2s ease;display:inline-flex;align-items:center;justify-content:center;gap:8px
+    }
+    .btn:hover{transform:translateY(-1px)}
+    .btn-primary{background:var(--orange);color:#fff;box-shadow:0 8px 22px rgba(243,111,33,.23)}
+    .btn-primary:hover{background:var(--orange-dark)}
+    .btn-outline{background:#fff;color:var(--navy);border:1px solid #b8c7d6}
+    .btn-dark{background:var(--navy);color:#fff}
+    .menu-btn{display:none;width:44px;height:44px;border-radius:10px;border:1px solid var(--line);background:#fff}
+
+    /* hero */
+    .hero{
+      overflow:hidden;position:relative;background:
+        radial-gradient(circle at 77% 18%, rgba(34,184,207,.20), transparent 31%),
+        radial-gradient(circle at 15% 20%, rgba(243,111,33,.08), transparent 22%),
+        linear-gradient(180deg,#fafdff 0%,#f5f9fc 100%);
+      padding:74px 0 64px;
+      border-bottom:1px solid #e8eff5;
+    }
+    .hero:before{
+      content:"";position:absolute;right:-110px;top:-140px;width:420px;height:420px;border-radius:50%;
+      border:46px solid rgba(10,47,87,.035)
+    }
+    .hero-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:56px;align-items:center}
+    .hero h1 span{color:var(--blue)}
+    .hero-points{display:flex;flex-wrap:wrap;gap:10px;margin:26px 0 30px}
+    .chip{background:#fff;border:1px solid #d7e2ec;border-radius:999px;padding:9px 13px;font-size:13px;font-weight:700;color:#36536c}
+    .hero-actions{display:flex;gap:12px;flex-wrap:wrap}
+    .trust-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:34px}
+    .trust-card{padding:14px 16px;border-left:3px solid var(--cyan);background:rgba(255,255,255,.72);border-radius:10px}
+    .trust-card b{display:block;font-size:18px;color:var(--navy)}
+    .trust-card span{font-size:12px;color:var(--muted)}
+
+    .hero-panel{
+      background:#fff;border:1px solid #dbe6ef;border-radius:24px;box-shadow:var(--shadow);overflow:hidden;
+      position:relative
+    }
+    .panel-top{background:var(--navy);color:#fff;padding:22px 24px;display:flex;justify-content:space-between;gap:16px;align-items:center}
+    .panel-top small{display:block;opacity:.75;margin-top:3px}
+    .live-dot{display:inline-flex;align-items:center;gap:7px;font-size:12px;font-weight:800;background:rgba(255,255,255,.12);padding:7px 10px;border-radius:999px}
+    .live-dot i{width:8px;height:8px;background:#41dc9b;border-radius:50%;box-shadow:0 0 0 5px rgba(65,220,155,.14)}
+    .panel-body{padding:24px}
+    .mini-student{display:flex;align-items:center;gap:14px;padding:15px;background:var(--soft);border-radius:14px;margin-bottom:18px}
+    .avatar{width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--cyan));color:#fff;display:grid;place-items:center;font-weight:900;font-size:18px}
+    .mini-student b{color:var(--navy)}
+    .progress{height:8px;background:#e8eef4;border-radius:999px;overflow:hidden;margin-top:8px}
+    .progress span{display:block;width:58%;height:100%;background:linear-gradient(90deg,var(--orange),#ff9f5d)}
+    .advisor-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .advisor-card{border:1px solid var(--line);padding:15px;border-radius:14px;background:#fff}
+    .advisor-card .kicker{font-size:11px;font-weight:800;color:var(--blue);text-transform:uppercase;letter-spacing:.08em}
+    .advisor-card b{display:block;margin-top:6px;color:var(--navy);font-size:15px}
+    .advisor-card p{font-size:12px;color:var(--muted);margin:5px 0 0}
+    .ai-card{margin-top:12px;padding:15px;border-radius:14px;background:linear-gradient(135deg,#ecf8fb,#f7fbfd);border:1px solid #cbe8ef}
+    .ai-card strong{color:var(--navy)}
+    .ai-card p{font-size:13px;color:#527082;margin:6px 0 0}
+
+    /* stats */
+    .stats{margin-top:-1px;background:#fff}
+    .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);border-radius:18px;box-shadow:0 12px 35px rgba(20,47,87,.08);overflow:hidden}
+    .stat{padding:24px;text-align:center;border-right:1px solid var(--line)}
+    .stat:last-child{border-right:none}
+    .stat b{display:block;color:var(--navy);font-size:25px}
+    .stat span{font-size:13px;color:var(--muted)}
+
+    /* cards */
+    .section-head{display:flex;justify-content:space-between;gap:30px;align-items:end;margin-bottom:34px}
+    .section-head .lead{margin-bottom:0;font-size:16px}
+    .cards-3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+    .feature-card{border:1px solid var(--line);border-radius:18px;padding:25px;background:#fff;transition:.2s ease}
+    .feature-card:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:#c9d9e6}
+    .icon{width:48px;height:48px;border-radius:14px;background:var(--soft-blue);display:grid;place-items:center;color:var(--blue);margin-bottom:17px}
+    .icon svg{width:25px;height:25px}
+    .feature-card p{color:var(--muted);font-size:14px;margin:0}
+
+    /* journey */
+    .journey{background:var(--navy);color:#fff;position:relative;overflow:hidden}
+    .journey .eyebrow{background:rgba(255,255,255,.1);color:#8ee3f3;border-color:rgba(255,255,255,.12)}
+    .journey .lead{color:#c7d7e7}
+    .journey-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:34px}
+    .step{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.11);border-radius:16px;padding:22px;min-height:190px}
+    .step-no{width:34px;height:34px;border-radius:10px;background:var(--orange);display:grid;place-items:center;font-weight:900;margin-bottom:18px}
+    .step p{color:#c9d6e2;font-size:14px;margin-bottom:0}
+
+    /* goals */
+    .goal-card{padding:0;overflow:hidden}
+    .goal-top{height:9px;background:linear-gradient(90deg,var(--blue),var(--cyan))}
+    .goal-inner{padding:24px}
+    .goal-badge{display:inline-flex;background:#fff4ed;color:var(--orange-dark);font-size:11px;font-weight:900;padding:6px 9px;border-radius:999px;margin-bottom:14px}
+    .goal-card ul{padding-left:18px;color:var(--muted);font-size:14px}
+
+    /* form */
+    .cta-wrap{background:linear-gradient(135deg,#eef8fb,#f9fbfd);border:1px solid #d7e9ef;border-radius:24px;padding:34px;display:grid;grid-template-columns:.85fr 1.15fr;gap:32px;align-items:center}
+    .form-card{background:#fff;border-radius:18px;border:1px solid var(--line);box-shadow:0 12px 30px rgba(20,47,87,.08);padding:22px}
+    .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .field{display:flex;flex-direction:column;gap:7px}
+    .field.full{grid-column:1/-1}
+    label{font-size:12px;font-weight:800;color:#37526a}
+    input,select{border:1px solid #cfdce7;background:#fff;border-radius:11px;padding:12px 13px;color:var(--ink);outline:none}
+    input:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(11,114,185,.10)}
+    .form-note{font-size:11px;color:var(--muted);margin:12px 0 0}
+
+    /* testimonials */
+    .quote{font-size:15px;color:#435b70}
+    .person{display:flex;align-items:center;gap:11px;margin-top:18px}
+    .person .avatar{width:42px;height:42px;font-size:14px}
+    .person small{display:block;color:var(--muted)}
+
+    /* FAQ */
+    .faq{display:grid;gap:12px;max-width:900px;margin:28px auto 0}
+    details{border:1px solid var(--line);border-radius:14px;padding:17px 18px;background:#fff}
+    summary{cursor:pointer;font-weight:800;color:var(--navy)}
+    details p{color:var(--muted);font-size:14px;margin:12px 0 0}
+
+    /* footer */
+    .footer{background:#071f39;color:#dbe8f4;padding:52px 0 24px}
+    .footer-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:34px}
+    .footer h4{color:#fff;margin:0 0 12px}
+    .footer a{display:block;font-size:13px;color:#b9cadd;margin:8px 0}
+    .footer p{font-size:13px;color:#b9cadd;max-width:360px}
+    .copy{border-top:1px solid rgba(255,255,255,.12);margin-top:32px;padding-top:18px;color:#91a9bf;font-size:12px;display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}
+
+    /* floating AI */
+    .ai-launcher{
+      position:fixed;right:24px;bottom:24px;z-index:60;border:none;cursor:pointer;
+      display:flex;align-items:center;gap:10px;background:var(--orange);color:#fff;padding:13px 17px;border-radius:999px;
+      font-weight:900;box-shadow:0 14px 34px rgba(243,111,33,.35)
+    }
+    .ai-launcher .bubble{width:32px;height:32px;border-radius:50%;background:#fff;color:var(--navy);display:grid;place-items:center;font-size:17px}
+
+    /* demo fallback modal */
+    .modal{position:fixed;inset:0;background:rgba(4,17,31,.62);z-index:90;display:none;align-items:center;justify-content:center;padding:20px}
+    .modal.open{display:flex}
+    .modal-card{width:min(420px,96vw);background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.32)}
+    .modal-head{background:var(--navy);color:#fff;padding:18px 20px;display:flex;justify-content:space-between;align-items:center}
+    .modal-head button{border:0;background:transparent;color:#fff;font-size:24px;cursor:pointer}
+    .chat-body{padding:18px;background:#f6f9fc;min-height:330px}
+    .msg{max-width:84%;padding:11px 13px;border-radius:14px;margin-bottom:10px;font-size:13px}
+    .msg.agent{background:#fff;border:1px solid #dce6ef;color:#2f495f}
+    .msg.user{margin-left:auto;background:var(--blue);color:#fff}
+    .demo-tag{font-size:10px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:var(--orange-dark);margin-bottom:10px}
+    .chat-actions{padding:12px 18px 18px;background:#fff}
+    .chat-actions .btn{width:100%}
+
+    .mobile-nav{display:none}
+
+    @media (max-width: 960px){
+      .nav-links{display:none}
+      .nav-actions .btn-outline{display:none}
+      .menu-btn{display:inline-grid;place-items:center}
+      .mobile-nav.open{display:grid;gap:8px;padding:14px 4vw 18px;border-top:1px solid var(--line);background:#fff}
+      .mobile-nav a{padding:10px 0;font-weight:700;color:#29435b}
+      .hero-grid,.cta-wrap{grid-template-columns:1fr}
+      .hero-panel{max-width:700px}
+      .cards-3{grid-template-columns:1fr 1fr}
+      .journey-grid{grid-template-columns:1fr 1fr}
+      .footer-grid{grid-template-columns:1fr 1fr}
+    }
+    @media (max-width: 640px){
+      .top-strip .right{display:none}
+      .nav-actions .btn-primary{display:none}
+      .hero{padding-top:52px}
+      .trust-row,.stats-grid,.cards-3,.journey-grid,.form-grid,.footer-grid{grid-template-columns:1fr}
+      .stat{border-right:none;border-bottom:1px solid var(--line)}
+      .stat:last-child{border-bottom:none}
+      .section{padding:56px 0}
+      .section-head{display:block}
+      .advisor-grid{grid-template-columns:1fr}
+      .ai-launcher{right:14px;bottom:14px;padding:11px 14px}
+      .ai-launcher .label{display:none}
+    }
+  </style>
+</head>
+
+<body>
+  <div class="top-strip">
+    <div class="container">
+      <div><strong>IMS Counselling Center POC</strong> · Career & MBA Guidance</div>
+      <div class="right"><span>Free Counselling</span><span>Online + Centre Visit</span><span>CAT / MBA Guidance</span></div>
+    </div>
+  </div>
+
+  <header class="header">
+    <div class="container nav">
+      <a class="brand" href="#top" aria-label="IMS Counselling Center home">
+        <div class="brand-mark">IMS</div>
+        <div class="brand-copy"><b>Counselling Center</b><span>Agentforce POC</span></div>
+      </a>
+
+      <nav class="nav-links" aria-label="Primary navigation">
+        <a href="#services">Counselling</a>
+        <a href="#journey">How it works</a>
+        <a href="#programs">Programs</a>
+        <a href="#why">Why IMS</a>
+        <a href="#faq">FAQs</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="btn btn-outline" type="button" onclick="scrollToForm()">Book Free Counselling</button>
+        <button class="btn btn-primary" type="button" onclick="launchAgent()">Talk to IMS AI</button>
+        <button class="menu-btn" type="button" aria-label="Open menu" onclick="toggleMenu()">☰</button>
+      </div>
+    </div>
+    <div class="mobile-nav" id="mobileNav">
+      <a href="#services" onclick="toggleMenu(false)">Counselling</a>
+      <a href="#journey" onclick="toggleMenu(false)">How it works</a>
+      <a href="#programs" onclick="toggleMenu(false)">Programs</a>
+      <a href="#why" onclick="toggleMenu(false)">Why IMS</a>
+      <a href="#faq" onclick="toggleMenu(false)">FAQs</a>
+      <button class="btn btn-primary" onclick="launchAgent()">Talk to IMS AI</button>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <span class="eyebrow">Personalised counselling · powered by Salesforce Agentforce</span>
+          <h1>Find the right <span>career, college and preparation path</span> with an IMS advisor.</h1>
+          <p class="lead">Start with the IMS AI assistant for quick questions, then continue with an Education Advisor for a personalised counselling session based on your goals, profile and target institutes.</p>
+
+          <div class="hero-points">
+            <span class="chip">✓ Free initial counselling</span>
+            <span class="chip">✓ Career & institute guidance</span>
+            <span class="chip">✓ CAT / MBA program support</span>
+            <span class="chip">✓ Online & offline counselling</span>
+          </div>
+
+          <div class="hero-actions">
+            <button class="btn btn-primary" type="button" onclick="launchAgent()">💬 Talk to IMS AI Counselor</button>
+            <button class="btn btn-outline" type="button" onclick="scrollToForm()">Book a Free Session</button>
+          </div>
+
+          <div class="trust-row">
+            <div class="trust-card"><b>Student-first</b><span>Only relevant questions and guidance</span></div>
+            <div class="trust-card"><b>Grounded</b><span>Programs, fees and criteria from approved data</span></div>
+            <div class="trust-card"><b>Human reviewed</b><span>Final counselling report checked by EA</span></div>
+          </div>
+        </div>
+
+        <div class="hero-panel" aria-label="EA counselling workspace preview">
+          <div class="panel-top">
+            <div>
+              <b>EA Counselling Workspace</b>
+              <small>Student 360 + AI brief</small>
+            </div>
+            <span class="live-dot"><i></i> AI Brief Ready</span>
+          </div>
+          <div class="panel-body">
+            <div class="mini-student">
+              <div class="avatar">ST</div>
+              <div style="flex:1">
+                <b>Sample Student</b>
+                <div style="font-size:12px;color:var(--muted)">CAT 2026 · Live Online · Website Agent</div>
+                <div class="progress"><span></span></div>
+                <div style="font-size:11px;color:var(--muted);margin-top:5px">Profile 58% complete</div>
+              </div>
+            </div>
+
+            <div class="advisor-grid">
+              <div class="advisor-card">
+                <span class="kicker">Known now</span>
+                <b>B.Com · Finance interest</b>
+                <p>Target exam: CAT 2026<br>Mode: Live Online</p>
+              </div>
+              <div class="advisor-card">
+                <span class="kicker">Ask next</span>
+                <b>3 important gaps</b>
+                <p>Graduation %<br>Target percentile<br>Work experience</p>
+              </div>
+              <div class="advisor-card">
+                <span class="kicker">Career direction</span>
+                <b>Finance / Consulting</b>
+                <p>Preliminary guidance. EA reviews before finalising.</p>
+              </div>
+              <div class="advisor-card">
+                <span class="kicker">Institute match</span>
+                <b>Calculated from criteria</b>
+                <p>Strong / Possible / Missing Data — never guessed by AI.</p>
+              </div>
+            </div>
+
+            <div class="ai-card">
+              <strong>IMS EA Copilot</strong>
+              <p>“Start by confirming the student’s target percentile and work experience before showing institute recommendations.”</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="stats section" style="padding-top:34px;padding-bottom:34px">
+      <div class="container">
+        <div class="stats-grid">
+          <div class="stat"><b>1 Screen</b><span>Student 360 counselling workspace</span></div>
+          <div class="stat"><b>2 Agents</b><span>Student assistant + EA copilot</span></div>
+          <div class="stat"><b>3 Stages</b><span>Profile → Career → IMS Path</span></div>
+          <div class="stat"><b>1 Report</b><span>EA-reviewed personalised outcome</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="services">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">Counselling built around the student</span>
+            <h2>What you can discuss with IMS</h2>
+          </div>
+          <p class="lead">The POC keeps the interaction simple: the AI assistant handles basic questions and the Education Advisor takes over for personalised recommendations.</p>
+        </div>
+
+        <div class="cards-3">
+          <article class="feature-card">
+            <div class="icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5V5a2 2 0 0 1 2-2h12v16H6a2 2 0 0 0-2 2.5"/><path d="M8 7h6M8 11h6"/></svg>
+            </div>
+            <h3>Profile Discovery</h3>
+            <p>Understand academics, graduation, work experience, interests, achievements, aspirations and what is still missing.</p>
+          </article>
+
+          <article class="feature-card">
+            <div class="icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/><path d="m12 8 3 4-3 4-3-4 3-4Z"/></svg>
+            </div>
+            <h3>Career & Institute Fit</h3>
+            <p>Review personalised career directions and verified institute matches, with reasons and missing-data warnings.</p>
+          </article>
+
+          <article class="feature-card">
+            <div class="icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M12 3v18"/><circle cx="12" cy="12" r="9"/></svg>
+            </div>
+            <h3>Path with IMS</h3>
+            <p>Connect the student’s target with the right IMS program, mode, official features, preparation milestones and next actions.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="journey section" id="journey">
+      <div class="container">
+        <span class="eyebrow">Simple end-to-end journey</span>
+        <h2 style="margin-top:14px">From first question to an EA-approved plan</h2>
+        <p class="lead">Website and walk-in students both enter the same Salesforce counselling journey.</p>
+
+        <div class="journey-grid">
+          <div class="step"><div class="step-no">1</div><h3>Ask IMS AI</h3><p>Student asks basic questions about programs, exams, centres, fees and counselling.</p></div>
+          <div class="step"><div class="step-no">2</div><h3>Confirm counselling</h3><p>Name, email and mobile are captured. A Lead is created only after the student confirms counselling intent.</p></div>
+          <div class="step"><div class="step-no">3</div><h3>Meet the EA</h3><p>The EA opens one Student 360 workspace with known facts, missing information and an AI-prepared briefing.</p></div>
+          <div class="step"><div class="step-no">4</div><h3>Review & send</h3><p>A personalised draft report is generated. The EA verifies it before the final PDF is emailed to the student.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="programs">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">Sample IMS-style program cards</span>
+            <h2>Choose how you want to prepare</h2>
+          </div>
+          <p class="lead">These are POC cards. In Salesforce, program details and pricing should come from the Program and pricing records used by your agent actions.</p>
+        </div>
+
+        <div class="cards-3">
+          <article class="feature-card goal-card">
+            <div class="goal-top"></div><div class="goal-inner"><span class="goal-badge">LIVE ONLINE</span><h3>CAT Live Online</h3><p class="lead" style="font-size:14px">Structured live learning with mentor support and online practice.</p><ul><li>Live faculty-led classes</li><li>Mentoring checkpoints</li><li>Mocks & performance review</li></ul><button class="btn btn-outline" onclick="launchAgentWithProgram('CAT Live Online')">Ask AI about this program</button></div>
+          </article>
+          <article class="feature-card goal-card">
+            <div class="goal-top" style="background:linear-gradient(90deg,var(--orange),#ffad6e)"></div><div class="goal-inner"><span class="goal-badge">CLASSROOM</span><h3>CAT Classroom</h3><p class="lead" style="font-size:14px">Centre-based preparation with face-to-face mentoring and structured practice.</p><ul><li>Classroom sessions</li><li>Centre mentor support</li><li>Practice & mock ecosystem</li></ul><button class="btn btn-outline" onclick="launchAgentWithProgram('CAT Classroom')">Ask AI about this program</button></div>
+          </article>
+          <article class="feature-card goal-card">
+            <div class="goal-top" style="background:linear-gradient(90deg,#5f63d8,#9194ef)"></div><div class="goal-inner"><span class="goal-badge">SELF-PACED</span><h3>Self Learning</h3><p class="lead" style="font-size:14px">Flexible preparation for students who prefer their own schedule and pace.</p><ul><li>Learning videos</li><li>Practice question bank</li><li>Test-series access</li></ul><button class="btn btn-outline" onclick="launchAgentWithProgram('Self Learning')">Ask AI about this program</button></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="why" style="background:var(--soft)">
+      <div class="container">
+        <div class="section-head">
+          <div><span class="eyebrow">Why this POC is useful</span><h2>A better counselling experience for both student and EA</h2></div>
+        </div>
+        <div class="cards-3">
+          <article class="feature-card"><h3>Student-safe AI</h3><p>Public website agent is restricted to approved student-facing information and handoff actions.</p></article>
+          <article class="feature-card"><h3>EA Copilot inside Salesforce</h3><p>The Employee Agent can be auto-invoked for a briefing and can also answer the EA’s live questions.</p></article>
+          <article class="feature-card"><h3>Deterministic truth</h3><p>College cutoff, eligibility, program fees and CRM updates remain controlled by Salesforce data and Flow/Apex.</p></article>
+          <article class="feature-card"><h3>One counselling workspace</h3><p>Profile, careers, institute matches, IMS path, report review and AI guidance appear together.</p></article>
+          <article class="feature-card"><h3>Human approval gate</h3><p>The agent creates the draft. The Education Advisor checks, edits or regenerates before sending.</p></article>
+          <article class="feature-card"><h3>Scalable foundation</h3><p>The same model can later support real IMS data, more programs, external institute sources and additional channels.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="counselling-form">
+      <div class="container">
+        <div class="cta-wrap">
+          <div>
+            <span class="eyebrow">Book free counselling</span>
+            <h2 style="margin-top:14px">Start with a few basic details</h2>
+            <p class="lead">For the POC, these values are passed as pre-chat/context fields to Agentforce. Your Salesforce action creates or updates the Lead only after counselling intent is confirmed.</p>
+            <div style="margin-top:18px;font-size:13px;color:#456176"><b>Campaign detected:</b> <span id="campaignLabel">002027</span><br><b>Source:</b> IMS Counselling Center POC</div>
+          </div>
+
+          <div class="form-card">
+            <div class="form-grid">
+              <div class="field full"><label for="fullName">Full name</label><input id="fullName" autocomplete="name" placeholder="Enter your full name" /></div>
+              <div class="field"><label for="email">Email</label><input id="email" type="email" autocomplete="email" placeholder="you@example.com" /></div>
+              <div class="field"><label for="mobile">Mobile</label><input id="mobile" inputmode="numeric" autocomplete="tel" placeholder="10-digit mobile" /></div>
+              <div class="field"><label for="program">Interested in</label><select id="program"><option>CAT Live Online</option><option>CAT Classroom</option><option>Self Learning</option><option>General MBA Counselling</option></select></div>
+              <div class="field"><label for="city">City / Centre</label><input id="city" placeholder="e.g. Vadodara" /></div>
+              <div class="field full"><button class="btn btn-primary" type="button" onclick="continueWithAgent()">Continue with IMS AI Counselor →</button></div>
+            </div>
+            <p class="form-note">POC note: this static page does not create a Salesforce Lead directly. The Agentforce Service Agent action / Flow should create or update the Lead after confirmed counselling intent.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head"><div><span class="eyebrow">Student experience</span><h2>Simple, guided and personal</h2></div></div>
+        <div class="cards-3">
+          <article class="feature-card"><p class="quote">“I can start with basic questions online and continue with a counsellor without repeating everything.”</p><div class="person"><div class="avatar">AS</div><div><b>Sample student</b><small>Website counselling journey</small></div></div></article>
+          <article class="feature-card"><p class="quote">“The EA sees what is known, what is missing and what to ask next, instead of opening many records.”</p><div class="person"><div class="avatar">EA</div><div><b>Education Advisor</b><small>Internal Salesforce view</small></div></div></article>
+          <article class="feature-card"><p class="quote">“The final report is personalised, but it is still checked by a human before it reaches the student.”</p><div class="person"><div class="avatar">POC</div><div><b>POC control</b><small>Review before send</small></div></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="faq" style="background:var(--soft)">
+      <div class="container">
+        <div style="text-align:center"><span class="eyebrow">Frequently asked questions</span><h2 style="margin-top:14px">Before you start counselling</h2></div>
+        <div class="faq">
+          <details><summary>Can I talk to the AI assistant before sharing my details?</summary><p>Yes. The website agent can answer approved basic questions. Contact information is captured when needed for counselling or follow-up.</p></details>
+          <details><summary>Will the AI decide which college I will get into?</summary><p>No. In this POC, institute eligibility is calculated from structured criteria. AI only explains the verified result in simple words.</p></details>
+          <details><summary>Can I meet an Education Advisor offline?</summary><p>Yes. The same POC supports walk-in intake. The EA enters minimum information and opens the same counselling workspace.</p></details>
+          <details><summary>When is my counselling report sent?</summary><p>After the draft is generated, the Education Advisor reviews and approves it. Only then is the final PDF sent to the student.</p></details>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div><div class="brand" style="margin-bottom:16px"><div class="brand-mark" style="background:#fff;color:var(--navy)">IMS</div><div class="brand-copy"><b style="color:#fff">Counselling Center</b><span style="color:#9db3c7">Agentforce POC</span></div></div><p>Prototype website for demonstrating a student-facing Agentforce Service Agent and Salesforce-based counselling journey.</p></div>
+        <div><h4>Counselling</h4><a href="#services">Profile Discovery</a><a href="#services">Career Guidance</a><a href="#services">Institute Fit</a><a href="#services">IMS Path</a></div>
+        <div><h4>Programs</h4><a href="#programs">Live Online</a><a href="#programs">Classroom</a><a href="#programs">Self Learning</a><a href="#counselling-form">Free Counselling</a></div>
+        <div><h4>POC</h4><a href="javascript:void(0)" onclick="launchAgent()">Launch IMS AI</a><a href="#journey">Student Journey</a><a href="#why">Architecture</a></div>
+      </div>
+      <div class="copy"><span>© 2026 IMS Counselling Center POC. Demo only.</span><span>Built for Salesforce Agentforce counselling demonstration.</span></div>
+    </div>
+  </footer>
+
+  <button class="ai-launcher" type="button" onclick="launchAgent()" aria-label="Talk to IMS AI Counselor">
+    <span class="bubble">✦</span><span class="label">Talk to IMS AI</span>
+  </button>
+
+  <div class="modal" id="demoModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-card">
+      <div class="modal-head"><div><b id="modalTitle">IMS Student Assistant</b><div style="font-size:11px;opacity:.75">Agentforce integration placeholder</div></div><button onclick="closeDemo()" aria-label="Close">×</button></div>
+      <div class="chat-body">
+        <div class="demo-tag">Demo fallback</div>
+        <div class="msg agent">Hi! I can help with IMS programs, CAT/MBA preparation and counselling. What would you like to know?</div>
+        <div class="msg user">I want guidance for CAT 2026.</div>
+        <div class="msg agent">Sure. I can answer basic questions first. If you want a counselling session, I’ll ask for your name, email and mobile and then connect the request to Salesforce.</div>
+      </div>
+      <div class="chat-actions"><button class="btn btn-dark" onclick="closeDemo();scrollToForm()">Start with my details</button></div>
+    </div>
+  </div>
+
+  <!-- =========================================================
+       SALESFORCE AGENTFORCE / ENHANCED WEB CHAT INTEGRATION
+       =========================================================
+
+       STEP 1:
+       Publish your Agentforce Service Agent + Enhanced Web Chat.
+
+       STEP 2:
+       Copy the Salesforce-generated Embedded Messaging snippet.
+
+       STEP 3:
+       PASTE THAT SNIPPET DIRECTLY BELOW THIS COMMENT.
+
+       Example location only — do NOT invent Org/Deployment values.
+  -->
+
+  <!-- PASTE SALESFORCE-GENERATED EMBEDDED MESSAGING SNIPPET HERE -->
+
+  <script>
+    // =========================================================
+    // POC CONFIGURATION
+    // Change ONLY the channel variable names below after you
+    // configure hidden pre-chat variables in Salesforce.
+    // =========================================================
+    const POC_CONFIG = {
+      hiddenPrechatFields: {
+        campaign: 'CampaignCode',
+        sourcePage: 'SourcePage',
+        sourceUrl: 'SourceUrl',
+        programInterest: 'ProgramInterest',
+        city: 'PreferredCity'
+      }
+    };
+
+    const pageParams = new URLSearchParams(window.location.search);
+    const sourceCampaign = pageParams.get('campaign') || '002027';
+    document.getElementById('campaignLabel').textContent = sourceCampaign;
+
+    let agentReady = false;
+    let pendingContext = null;
+
+    function toggleMenu(force){
+      const nav = document.getElementById('mobileNav');
+      if(typeof force === 'boolean') nav.classList.toggle('open', force);
+      else nav.classList.toggle('open');
+    }
+
+    function scrollToForm(){
+      document.getElementById('counselling-form').scrollIntoView({behavior:'smooth', block:'start'});
+    }
+
+    function openDemo(){ document.getElementById('demoModal').classList.add('open'); }
+    function closeDemo(){ document.getElementById('demoModal').classList.remove('open'); }
+
+    function launchAgent(){
+      try{
+        if(window.embeddedservice_bootstrap && embeddedservice_bootstrap.utilAPI && typeof embeddedservice_bootstrap.utilAPI.launchChat === 'function'){
+          embeddedservice_bootstrap.utilAPI.launchChat();
+        } else {
+          openDemo();
+        }
+      }catch(e){
+        console.warn('Agentforce chat is not connected yet.', e);
+        openDemo();
+      }
+    }
+
+    function launchAgentWithProgram(programName){
+      document.getElementById('program').value = programName;
+      pendingContext = collectContext();
+      applyHiddenContext();
+      launchAgent();
+    }
+
+    function collectContext(){
+      return {
+        fullName: document.getElementById('fullName')?.value?.trim() || '',
+        email: document.getElementById('email')?.value?.trim() || '',
+        mobile: document.getElementById('mobile')?.value?.trim() || '',
+        program: document.getElementById('program')?.value || 'CAT Live Online',
+        city: document.getElementById('city')?.value?.trim() || '',
+        campaign: sourceCampaign,
+        sourcePage: window.location.pathname,
+        sourceUrl: window.location.href
+      };
+    }
+
+    function continueWithAgent(){
+      const ctx = collectContext();
+      if(!ctx.fullName){ alert('Please enter your full name.'); return; }
+      if(!ctx.email){ alert('Please enter your email.'); return; }
+      if(!ctx.mobile || ctx.mobile.replace(/\D/g,'').length < 10){ alert('Please enter a valid mobile number.'); return; }
+
+      pendingContext = ctx;
+      sessionStorage.setItem('imsPocContext', JSON.stringify(ctx));
+      applyHiddenContext();
+      launchAgent();
+    }
+
+    function applyHiddenContext(){
+      const ctx = pendingContext || collectContext();
+      try{
+        // Hidden pre-chat fields are available only after the
+        // Embedded Messaging API is ready and the matching Salesforce
+        // channel variables have been configured.
+        if(window.embeddedservice_bootstrap?.prechatAPI?.setHiddenPrechatFields){
+          const h = POC_CONFIG.hiddenPrechatFields;
+          const payload = {};
+          payload[h.campaign] = ctx.campaign;
+          payload[h.sourcePage] = ctx.sourcePage;
+          payload[h.sourceUrl] = ctx.sourceUrl;
+          payload[h.programInterest] = ctx.program;
+          payload[h.city] = ctx.city;
+          embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields(payload);
+        }
+      }catch(e){
+        console.warn('Hidden pre-chat context could not be set yet.', e);
+      }
+    }
+
+    // Salesforce dispatches this when Enhanced Messaging is ready.
+    window.addEventListener('onEmbeddedMessagingReady', () => {
+      agentReady = true;
+      try{
+        const saved = sessionStorage.getItem('imsPocContext');
+        if(saved) pendingContext = JSON.parse(saved);
+      }catch(e){}
+      applyHiddenContext();
+    });
+
+    // Optional visible pre-chat mapping helper:
+    // Configure Salesforce-visible pre-chat fields for first/last name,
+    // email and mobile in the deployment. Keep Lead creation in the
+    // Service Agent Flow/action after confirmed counselling intent.
+  </script>
+</body>
+</html>
